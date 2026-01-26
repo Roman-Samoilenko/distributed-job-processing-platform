@@ -1,0 +1,177 @@
+# =====================================================
+# Distributed Job Processing Platform - GLOBAL .gitignore
+# FIXED VERSION
+# =====================================================
+
+# ======================
+# IDE / Editors (только локальные настройки)
+# ======================
+# VS Code — только user-specific файлы
+.vscode/
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/settings.user.json
+
+# IntelliJ IDEA
+.idea/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/shelf
+.idea/contentModel.xml
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+
+# ======================
+# Java / Gradle / Maven
+# ======================
+.gradle/
+build/
+target/
+!**/src/main/**/build/
+*.jar
+*.war
+hs_err_pid*
+
+# ======================
+# Go
+# ======================
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.race
+*.out
+go.work
+go.work.sum
+
+# ======================
+# Docker Volumes / Data
+# ======================
+*-data/
+postgres-data/
+kafka-data/
+zookeeper-data/
+minio-data/
+prometheus-data/
+grafana-data/
+nginx-cache/
+volumes/
+
+# ======================
+# Logs
+# ======================
+logs/
+*.log
+*.log.*
+logfiles/
+loki/
+
+# ======================
+# Databases
+# ======================
+*.db
+*.sqlite
+*.sqlite3
+pgdata/
+postgresql-data/
+
+# ======================
+# Environment / Secrets
+# ======================
+.env*
+*.env.local
+*.secret
+secrets/
+config/secrets/
+certs/
+*.key
+*.pem
+*.crt
+*.p12
+
+# ======================
+# OS Generated
+# ======================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Icon?
+
+# ======================
+# Testing / Coverage
+# ======================
+coverage/
+cover.*
+test-results/
+junit.xml
+jacoco/
+
+# ======================
+# Build / Temp
+# ======================
+dist/
+out/
+release/
+tmp/
+*.tmp
+*.temp
+*.swp
+*~
+
+# ======================
+# Monitoring Data
+# ======================
+prometheus/data/
+grafana/data/
+grafana/provisioning/datasources/
+jaeger/
+zipkin/
+tempo/
+
+# ======================
+# K8s Generated
+# ======================
+k8s/generated/
+k8s/overlays/*/.kustomization-tmp
+k8s/local/
+
+# ======================
+# CI/CD Local
+# ======================
+.github/workflows/*.yml.disabled
+.gitlab-ci.yml.local
+
+# ======================
+# PROJECT SPECIFIC
+# ======================
+# Local overrides
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Local K8s
+k8s/overlays/local/
+
+# Backup files
+*.backup.sql
+*.backup.tar.gz
+
+# IDE project files (keep common settings)
+.vscode/extensions.json    # ✅ Keep - shared extensions
+.vscode/settings.json       # ✅ Keep - common settings

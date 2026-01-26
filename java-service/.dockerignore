@@ -1,0 +1,46 @@
+# Build artifacts
+target/
+build/
+.gradle/
+.mvn/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Git
+.git
+.github/
+
+# Documentation
+README.md
+docs/
+CONTRIBUTING.md
+LICENSE
+
+# Tests
+src/test/
+**/test/
+pom.xml
+build.gradle
+settings.gradle
+mvnw
+mvnw.cmd
+gradlew
+gradlew.bat
+
+# Logs
+*.log
+logs/
+
+# Local config
+application-local.yml
+application-test.yml
+.env
+
+# Temp files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db

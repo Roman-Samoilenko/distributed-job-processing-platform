@@ -1,0 +1,42 @@
+# Binaries
+bin/
+*.exe
+*.test
+
+# Dependencies
+vendor/
+
+# Git
+.git
+.github/
+
+# Documentation
+README.md
+docs/
+CONTRIBUTING.md
+LICENSE
+
+# IDE
+.idea/
+.vscode/
+Makefile
+
+# Tests
+*_test.go
+*_testdata/
+
+# Coverage
+coverage/
+cover.out
+
+# Logs
+*.log
+logs/
+
+# Local config
+.env
+config.local.yaml
+
+# Temp files
+*.tmp
+.DS_Store

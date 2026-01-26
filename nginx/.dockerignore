@@ -1,0 +1,24 @@
+# Git
+.git
+.github/
+
+# Documentation
+README.md
+docs/
+
+# IDE
+.idea/
+.vscode/
+
+# Source code (не нужен в nginx image)
+../api-service/
+../worker-service/
+../k8s/
+
+# Logs
+*.log
+logs/
+
+# Temp
+.DS_Store
+Thumbs.db
