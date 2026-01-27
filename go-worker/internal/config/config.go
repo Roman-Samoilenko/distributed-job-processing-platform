@@ -10,7 +10,7 @@ import (
 
 	"log/slog"
 
-	"github.com/caarlos0/env/v6"
+	env "github.com/caarlos0/env/v6"
 )
 
 // Config содержит всю конфигурацию сервиса
@@ -105,7 +105,7 @@ func (c *Config) Validate() error {
 func Load(ctx context.Context) (*Config, error) {
 	cfg := &Config{}
 
-	if err := env.Parse(ctx, cfg); err != nil {
+	if err := env.Parse(cfg); err != nil {
 		return nil, fmt.Errorf("failed to parse environment variables: %w", err)
 	}
 
