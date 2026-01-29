@@ -2,12 +2,12 @@ syntax = "proto3";
 
 package jobplatform;
 
-option go_package = "./pkg/proto";
+option go_package = "github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/gen;jobplatform";
+
 option java_package = "com.jobplatform.grpc";
 option java_multiple_files = true;
 
 // Схема данных для Kafka (Java -> Kafka -> Go)
-
 message JobTask {
   int64 job_id = 1;
 
@@ -20,11 +20,10 @@ message JobTask {
   TaskType type = 2;
 
   string payload = 3; // JSON параметры
-  int64 created_at = 4;
+  int64 created_at = 4; // Unix timestamp
 }
 
 // gRPC Сервис (Go -> Java)
-
 service JobStatusService {
   // Воркер вызывает этот метод, чтобы сообщить результат обработки
   rpc UpdateJobStatus (UpdateJobStatusRequest) returns (UpdateJobStatusResponse);
@@ -40,7 +39,7 @@ message UpdateJobStatusRequest {
   }
   JobStatus status = 2;
 
-  string result = 3;
+  string result = 3; // JSON результат или строка
   string error_message = 4;
 }
 

@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"go-worker/internal/config"
+	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/config"
 )
 
 func main() {

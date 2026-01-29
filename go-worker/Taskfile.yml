@@ -35,7 +35,7 @@ tasks:
       - echo "Validating proto syntax..."
       - test -f {{.PROTO_DIR}}/job_service.proto && echo "✓ Proto file exists" || echo "✗ Proto file not found"
       - echo "✓ Proto validation skipped (use 'task proto' to generate and validate)"
-        
+
   # Установка protoc плагинов
   proto-deps:
     desc: "Install protoc dependencies"
@@ -80,3 +80,10 @@ tasks:
       - rm -rf ./bin
       - go clean
       - echo "✓ Project cleaned"
+
+# Линтер
+  go-lint:
+    desc: "Run golangci-lint with auto-fix"
+    cmds:
+      - golangci-lint run --fix
+    silent: false  # ← ВАЖНО: показывать вывод
