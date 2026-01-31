@@ -3,7 +3,6 @@ package models
 import (
 	"encoding/json"
 	"errors"
-	"time"
 )
 
 // JobType определяет тип задачи
@@ -14,6 +13,13 @@ const (
 	JobTypeImageResize JobType = "IMAGE_RESIZE"
 	JobTypeSleep       JobType = "SLEEP"
 )
+
+// AllJobTypes - полный список всех поддерживаемых типов задач
+var AllJobTypes = []JobType{
+	JobTypeHttpGet,
+	JobTypeImageResize,
+	JobTypeSleep,
+}
 
 // JobStatus определяет текущее состояние
 type JobStatus string
@@ -27,10 +33,10 @@ const (
 
 // Job — основная структура задачи внутри воркера
 type Job struct {
-	ID        int64     `json:"id"`
-	Type      JobType   `json:"type"`
-	Payload   string    `json:"payload"` // Сырой JSON параметров
-	CreatedAt time.Time `json:"created_at"`
+	ID        int64   `json:"id"`
+	Type      JobType `json:"type"`
+	Payload   string  `json:"payload"`
+	CreatedAt int64   `json:"created_at"` // Unix timestamp
 }
 
 // JobResult — результат выполнения задачи
@@ -38,7 +44,7 @@ type JobResult struct {
 	JobID  int64
 	Status JobStatus
 	Result string
-	Error  error
+	Error  string
 }
 
 // PayloadHttpGet — структура payload для HTTP задач
@@ -65,4 +71,14 @@ func ParsePayload[T any](payloadJSON string) (*T, error) {
 		return nil, errors.New("invalid payload format: " + err.Error())
 	}
 	return &t, nil
+}
+
+// IsValid проверяет, что тип задачи поддерживается
+func (jt JobType) IsValid() bool {
+	for _, validType := range AllJobTypes {
+		if jt == validType {
+			return true
+		}
+	}
+	return false
 }
