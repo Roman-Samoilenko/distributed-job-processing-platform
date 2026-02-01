@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-// JobType определяет тип задачи
+// JobType определяет тип задачи.
 type JobType string
 
 const (
@@ -14,14 +14,14 @@ const (
 	JobTypeSleep       JobType = "SLEEP"
 )
 
-// AllJobTypes - полный список всех поддерживаемых типов задач
+// AllJobTypes - полный список всех поддерживаемых типов задач.
 var AllJobTypes = []JobType{
 	JobTypeHttpGet,
 	JobTypeImageResize,
 	JobTypeSleep,
 }
 
-// JobStatus определяет текущее состояние
+// JobStatus определяет текущее состояние.
 type JobStatus string
 
 const (
@@ -31,7 +31,7 @@ const (
 	StatusFailed     JobStatus = "FAILED"
 )
 
-// Job — основная структура задачи внутри воркера
+// Job — основная структура задачи внутри воркера.
 type Job struct {
 	ID        int64   `json:"id"`
 	Type      JobType `json:"type"`
@@ -39,7 +39,7 @@ type Job struct {
 	CreatedAt int64   `json:"created_at"` // Unix timestamp
 }
 
-// JobResult — результат выполнения задачи
+// JobResult — результат выполнения задачи.
 type JobResult struct {
 	JobID  int64
 	Status JobStatus
@@ -47,24 +47,24 @@ type JobResult struct {
 	Error  string
 }
 
-// PayloadHttpGet — структура payload для HTTP задач
+// PayloadHttpGet — структура payload для HTTP задач.
 type PayloadHttpGet struct {
 	URL string `json:"url"`
 }
 
-// PayloadImageResize — структура payload для картинок
+// PayloadImageResize — структура payload для картинок.
 type PayloadImageResize struct {
 	ImageURL string `json:"image_url"`
 	Width    int    `json:"width"`
 	Height   int    `json:"height"`
 }
 
-// PayloadSleep — структура payload для sleep
+// PayloadSleep — структура payload для sleep.
 type PayloadSleep struct {
 	DurationMs int `json:"duration_ms"`
 }
 
-// ParsePayload — вспомогательный метод
+// ParsePayload — вспомогательный метод.
 func ParsePayload[T any](payloadJSON string) (*T, error) {
 	var t T
 	if err := json.Unmarshal([]byte(payloadJSON), &t); err != nil {
@@ -73,7 +73,7 @@ func ParsePayload[T any](payloadJSON string) (*T, error) {
 	return &t, nil
 }
 
-// IsValid проверяет, что тип задачи поддерживается
+// IsValid проверяет, что тип задачи поддерживается.
 func (jt JobType) IsValid() bool {
 	for _, validType := range AllJobTypes {
 		if jt == validType {

@@ -16,7 +16,7 @@ func NewResultHandler(grpcClient *GrpcClient) *ResultHandler {
 	return &ResultHandler{grpcClient: grpcClient}
 }
 
-// Обработка успешного выполнения задачи
+// Обработка успешного выполнения задачи.
 func (h *ResultHandler) HandleSuccess(jobID int64, result interface{}) error {
 	resultJSON, err := json.Marshal(result)
 	if err != nil {
@@ -32,7 +32,7 @@ func (h *ResultHandler) HandleSuccess(jobID int64, result interface{}) error {
 	return h.grpcClient.SendStatus(context.Background(), req)
 }
 
-// Обработка ошибки выполнения задачи
+// Обработка ошибки выполнения задачи.
 func (h *ResultHandler) HandleFailure(jobID int64, err error) error {
 	req := &pb.UpdateJobStatusRequest{
 		JobId:        jobID,
@@ -44,7 +44,7 @@ func (h *ResultHandler) HandleFailure(jobID int64, err error) error {
 	return h.grpcClient.SendStatus(context.Background(), req)
 }
 
-// Специфичная логика для разных типов задач
+// Специфичная логика для разных типов задач.
 func (h *ResultHandler) HandleHTTPResult(jobID int64, statusCode int, body string) error {
 	result := map[string]interface{}{
 		"status_code":  statusCode,

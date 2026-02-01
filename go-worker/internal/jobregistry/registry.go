@@ -40,7 +40,6 @@ func Register(jobType models.JobType, protoType pb.JobTask_TaskType, factory Exe
 	protoTypeToJobType[protoType] = jobType
 
 	executorFactories[jobType] = factory
-
 }
 
 func JobTypeFromProto(protoType pb.JobTask_TaskType) (models.JobType, error) {
