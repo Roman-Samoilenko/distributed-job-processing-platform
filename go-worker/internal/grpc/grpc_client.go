@@ -43,8 +43,8 @@ func (gc *GrpcClient) SendStatus(ctx context.Context, req *pb.UpdateJobStatusReq
 	if err != nil {
 		return fmt.Errorf("не удалось выполнить вызов gRPC: %w", err)
 	}
-	if !resp.Success {
-		return fmt.Errorf("gRPC сервер вернул ошибку для %d задачи", req.JobId)
+	if !resp.GetSuccess() {
+		return fmt.Errorf("gRPC сервер вернул ошибку для %d задачи", req.GetJobId())
 	}
 
 	return nil

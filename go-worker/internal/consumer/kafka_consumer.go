@@ -73,8 +73,11 @@ func (kc *kafkaConsumer) Start(ctx context.Context) error {
 				slog.Error("Failed to commit offset", "error", err)
 			}
 		}
-
 	}
+}
+
+func (kc *kafkaConsumer) Close() error {
+	return kc.reader.Close()
 }
 
 func (kc *kafkaConsumer) processMessage(ctx context.Context, msg kafka.Message) error {
@@ -83,20 +86,20 @@ func (kc *kafkaConsumer) processMessage(ctx context.Context, msg kafka.Message) 
 		return fmt.Errorf("failed to unmarshal protobuf: %w", err)
 	}
 	slog.Debug("Received job from Kafka",
-		slog.Int64("job_id", jobTask.JobId),
-		slog.String("type", jobTask.Type.String()),
+		slog.Int64("job_id", jobTask.GetJobId()),
+		slog.String("type", jobTask.GetType().String()),
 	)
 
-	jobType, err := jobregistry.JobTypeFromProto(jobTask.Type)
+	jobType, err := jobregistry.JobTypeFromProto(jobTask.GetType())
 	if err != nil {
 		return fmt.Errorf("unknown task type: %w", err)
 	}
 
 	job := models.Job{
-		ID:        jobTask.JobId,
+		ID:        jobTask.GetJobId(),
 		Type:      jobType,
-		Payload:   jobTask.Payload,
-		CreatedAt: jobTask.CreatedAt,
+		Payload:   jobTask.GetPayload(),
+		CreatedAt: jobTask.GetCreatedAt(),
 	}
 
 	// Отправка в Worker Pool через канал
@@ -106,9 +109,4 @@ func (kc *kafkaConsumer) processMessage(ctx context.Context, msg kafka.Message) 
 	case <-ctx.Done():
 		return ctx.Err()
 	}
-
-}
-
-func (kc *kafkaConsumer) Close() error {
-	return kc.reader.Close()
 }
