@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"google.golang.org/grpc/credentials/insecure"
+
 	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/config"
 
 	pb "github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/gen"
@@ -17,8 +19,9 @@ type GrpcClient struct {
 	client  pb.JobStatusServiceClient
 }
 
-func NewGrpcClient(cfg config.Config) (*GrpcClient, error) {
-	conn, err := grpc.NewClient(cfg.GrpcServerAddress, grpc.WithInsecure())
+func NewGrpcClient(cfg *config.Config) (*GrpcClient, error) {
+	conn, err := grpc.NewClient(cfg.GrpcServerAddress,
+		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}

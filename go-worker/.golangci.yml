@@ -35,7 +35,6 @@ linters:
     - funcorder
     - funlen
     - gocheckcompilerdirectives
-    - gochecknoinits
     - gochecksumtype
     - gocognit
     - goconst
@@ -98,7 +97,6 @@ issues:
   exclude-rules:
     - path: ".*_test\\.go"
       linters:
-        - gochecknoinits
         - gocritic
         - mnd
         - gocognit

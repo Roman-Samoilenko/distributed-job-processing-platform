@@ -15,6 +15,8 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+const MaxMessageBytes = 10e6 // 10MB
+
 type kafkaConsumer struct {
 	jobChan chan<- models.Job
 	reader  *kafka.Reader
@@ -31,7 +33,7 @@ func NewKafkaConsumer(cfg *config.Config, jobChan chan<- models.Job) Consumer {
 		Topic:          cfg.KafkaTopic,
 		GroupID:        cfg.KafkaGroupID,
 		MinBytes:       1,
-		MaxBytes:       10e6,
+		MaxBytes:       MaxMessageBytes,
 		CommitInterval: 0,
 		StartOffset:    kafka.LastOffset,
 	})

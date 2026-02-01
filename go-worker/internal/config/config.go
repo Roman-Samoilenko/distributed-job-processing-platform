@@ -23,9 +23,10 @@ type Config struct {
 	GrpcTimeout       time.Duration `env:"GRPC_TIMEOUT,default=5s"`
 
 	// Worker Pool
-	WorkerPoolSize    int           `env:"WORKER_POOL_SIZE,default=10"`
-	MaxJobTimeout     time.Duration `env:"MAX_JOB_TIMEOUT,default=30s"`
-	JobsChannelBuffer int           `env:"JOBS_CHANNEL_BUFFER,default=100"`
+	WorkerPoolSize       int           `env:"WORKER_POOL_SIZE,default=10"`
+	MaxJobTimeout        time.Duration `env:"MAX_JOB_TIMEOUT,default=30s"`
+	JobsChannelBuffer    int           `env:"JOBS_CHANNEL_BUFFER,default=100"`
+	ResultsChannelBuffer int           `env:"RESULTS_CHANNEL_BUFFER,default=100"`
 
 	// Logging
 	LogLevel  string `env:"LOG_LEVEL,default=info"`
