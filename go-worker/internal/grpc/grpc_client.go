@@ -19,7 +19,7 @@ type GrpcClient struct {
 	client  pb.JobStatusServiceClient
 }
 
-func NewGrpcClient(cfg config.Config) (*GrpcClient, error) {
+func NewGrpcClient(cfg *config.Config) (*GrpcClient, error) {
 	conn, err := grpc.NewClient(cfg.GrpcServerAddress,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
