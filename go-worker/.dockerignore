@@ -20,6 +20,8 @@ LICENSE
 .idea/
 .vscode/
 Makefile
+Taskfile.yml
+Taskfile.ymal
 
 # Tests
 *_test.go
@@ -34,9 +36,10 @@ cover.out
 logs/
 
 # Local config
-.env
 config.local.yaml
 
 # Temp files
 *.tmp
 .DS_Store
+
+.golangci.yml

@@ -13,7 +13,7 @@ import (
 type Config struct {
 	// Kafka
 	KafkaBrokers     string   `env:"KAFKA_BROKERS,required"`
-	KafkaBrokersList []string `env:"-"` // Заполняется в main после парсинга
+	KafkaBrokersList []string // Заполняется в main после парсинга
 	KafkaTopic       string   `env:"KAFKA_TOPIC,default=job_requests"`
 	KafkaGroupID     string   `env:"KAFKA_GROUP_ID,required"`
 	KafkaClientID    string   `env:"KAFKA_CLIENT_ID,default=go-worker"`

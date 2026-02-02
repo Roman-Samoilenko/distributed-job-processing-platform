@@ -86,4 +86,32 @@ tasks:
     desc: "Run golangci-lint with auto-fix"
     cmds:
       - golangci-lint run --fix
-    silent: false  # ← ВАЖНО: показывать вывод
+    silent: false
+  
+  rerun:
+    desc: "Пересборка контейнера и его запуск"
+    cmds:
+      - docker rm -f go-work-cont || echo "Контейнера не было, пропускаем"
+      - docker build -t go-worker .
+      - docker run -d --name go-work-cont go-worker
+
+  run:
+    desc: "Чистый запуск контейнера"
+    cmds:
+      - docker rm -f go-work-cont || true
+      - docker run -d --rm --name go-work-cont go-worker
+
+  rm:
+    desc: "Удаление контейнера"
+    cmds:
+      - docker rm -f go-work-cont || true
+  
+  start:
+    desc: "Запуск контейнера"
+    cmds:
+      - docker start go-work-cont
+
+  stop:
+    desc: "Остановка/пауза контейнера"
+    cmds:
+      - docker stop go-work-cont
