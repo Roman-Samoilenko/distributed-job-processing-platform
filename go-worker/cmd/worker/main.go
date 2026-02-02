@@ -11,16 +11,20 @@ import (
 
 	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/config"
 	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/consumer"
-	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/executor"
-	pb "github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/gen"
+	_ "github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/executor"
 	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/grpc"
 	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/jobregistry"
 	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/models"
 	"github.com/Roman-Samoilenko/distributed-job-processing-platform/go-worker/internal/worker"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+
 	// 1. Загрузка конфигурации ДО создания контекста
+	if err := godotenv.Load(".env"); err != nil {
+		slog.Warn("No .env file found or error loading it", "error", err)
+	}
 	cfg, err := config.Load(context.Background())
 	if err != nil {
 		panic("failed to load config: " + err.Error())
@@ -35,34 +39,30 @@ func main() {
 
 	slog.Info("Starting Job Worker Service", slog.String("env", cfg.Environment))
 
-	// 4. Регистрация executor'ов (явно, без init)
-	registerExecutors()
-
-	// 5. Валидация реестра
+	// 4. Валидация реестра
 	if err := jobregistry.ValidateAllTypesRegistered(); err != nil {
 		slog.Error("Registry validation failed", "error", err)
 		panic(err.Error())
 	}
 
-	// 6. Инициализация компонентов
+	// 5. Инициализация компонентов
 	components, err := initializeComponents(ctx, &cfg)
 	if err != nil {
 		slog.Error("Failed to initialize components", "error", err)
 		panic(err.Error())
 	}
 
-	// 7. Запуск компонентов
+	// 6. Запуск компонентов
 	startComponents(ctx, components)
 
-	// 8. Ожидание сигнала завершения
+	// 7. Ожидание сигнала завершения
 	<-ctx.Done()
 	slog.Info("Shutdown signal received")
 
-	// 9. Graceful shutdown с таймаутом
+	// 8. Graceful shutdown с таймаутом
 	shutdownComponents(components)
 }
 
-// setupLogging выносим настройку логирования в отдельную функцию.
 func setupLogging(cfg *config.Config) {
 	var handler slog.Handler
 	opts := &slog.HandlerOptions{
@@ -76,21 +76,6 @@ func setupLogging(cfg *config.Config) {
 		handler = slog.NewTextHandler(os.Stderr, opts)
 	}
 	slog.SetDefault(slog.New(handler))
-}
-
-// registerExecutors явная регистрация вместо init().
-func registerExecutors() {
-	jobregistry.Register(
-		models.JobTypeSleep,
-		pb.JobTask_SLEEP,
-		func(cfg *config.Config) jobregistry.Executor {
-			exec := executor.NewSleepExecutor()
-			return func(ctx context.Context, payload string) (string, error) {
-				return exec.Execute(ctx, payload)
-			}
-		},
-	)
-	// Добавьте остальные типы здесь когда реализуете
 }
 
 // components содержит все компоненты системы.
