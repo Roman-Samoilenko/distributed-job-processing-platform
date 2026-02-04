@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort # Или LoadBalancer, если в облаке
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: nginx-proxy

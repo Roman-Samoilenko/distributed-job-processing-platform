@@ -22,9 +22,6 @@ LICENSE
 # Tests
 src/test/
 **/test/
-pom.xml
-build.gradle
-settings.gradle
 mvnw
 mvnw.cmd
 gradlew

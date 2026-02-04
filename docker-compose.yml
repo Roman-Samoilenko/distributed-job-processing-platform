@@ -1,4 +1,17 @@
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    command: -p 5444
+    environment:
+      POSTGRES_DB: jobsdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5444:5444"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
@@ -22,6 +35,25 @@ services:
       timeout: 5s
       retries: 5
 
+  java-service:
+    build:
+      context: .
+      dockerfile: java-service/Dockerfile
+    container_name: java-service
+    depends_on:
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5444
+      - POSTGRES_DB=jobsdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - KAFKA_BROKERS=kafka:9092
+    restart: on-failure
+
   go-worker:
     build:
       context: ./go-worker
@@ -30,4 +62,22 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      java-service:
+        condition: service_started
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - GRPC_SERVER_ADDRESS=java-service:9090
+      - LOG_FORMAT=text
     restart: on-failure
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    depends_on:
+      - java-service
+    ports:
+      - "8080:80"
+    restart: always
+
+volumes:
+  postgres_data:

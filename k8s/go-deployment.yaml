@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-worker
+  template:
+    metadata:
+      labels:
+        app: go-worker
+    spec:
+      initContainers:
+      - name: wait-for-kafka
+        image: busybox:1.36
+        command:
+          - sh
+          - -c
+          - |
+            echo "Waiting for kafka-service:9092 stable..."
+            ok=0
+            while [ $ok -lt 5 ]; do
+              if nc -z kafka-service 9092; then
+                ok=$((ok+1))
+                echo "ok $ok/5"
+              else
+                ok=0
+                echo "not ready, reset counter"
+              fi
+              sleep 2
+            done
+            echo "Kafka looks stable"
+
+      containers:
+      - name: go-worker
+        image: romansamoylenko/go-worker:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: KAFKA_BROKERS
+          value: "kafka-service:9092"
+        - name: GRPC_SERVER_ADDRESS
+          value: "java-service:9090"
+        - name: LOG_FORMAT
+          value: "text"

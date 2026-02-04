@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    // Плагин для автоматической генерации Java-классов из .proto файлов
+    id 'com.google.protobuf' version '0.9.4'
+}
+
+group = 'com.jobplatform'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.postgresql:postgresql'
+    
+    // gRPC
+    implementation 'net.devh:grpc-server-spring-boot-starter:2.15.0.RELEASE'
+    implementation 'io.grpc:grpc-protobuf:1.60.0'
+    implementation 'io.grpc:grpc-stub:1.60.0'
+    implementation 'com.google.protobuf:protobuf-java:3.25.1'
+    
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    implementation 'org.glassfish:javax.annotation:10.0-b28'
+    
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+// Настройка генерации кода из .proto файлов
+protobuf {
+    // Компилятор protobuf (protoc) - превращает .proto в .java
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.25.1'
+    }
+    
+    // Плагин для генерации gRPC service stubs (классов для сервера/клиента)
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.60.0'
+        }
+    }
+    
+    // Запускаем генерацию с плагином grpc
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+// Указываем, где искать .proto файлы и куда класть сгенерированный код
+sourceSets {
+    main {
+        proto {
+            // Путь к общей папке proto в корне монорепозитория job-processing-platform
+            srcDir '../proto'
+        }
+        java {
+            // Сгенерированные классы попадут сюда (автоматически добавляются в classpath)
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
