@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: job-platform
+  
+  # Настройки подключения к PostgreSQL
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5444/${POSTGRES_DB:jobsdb}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+  
+  # Hibernate автоматически создаст таблицы на основе @Entity классов
+  jpa:
+    hibernate:
+      ddl-auto: update  # В продакшене лучше использовать Flyway, но для MVP подходит
+    show-sql: true     # Не выводим SQL в логи (для debug можно включить)
+  
+  # Настройки Kafka Producer
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+    producer:
+      # Сериализация ключа сообщения (в нашем случае job_id как строка)
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # Сериализация значения (Protobuf message превращается в byte[])
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+
+# Порт REST API
+server:
+  port: ${SERVER_PORT:8080}
+
+# Порт gRPC сервера (настраивается библиотекой grpc-spring-boot-starter)
+grpc:
+  server:
+    port: ${GRPC_PORT:9090}
+
+# Имя топика Kafka, куда отправляем задачи
+kafka:
+  topic: ${KAFKA_TOPIC:job_requests}
